@@ -84,7 +84,6 @@ static void (* const (VSYNC_FUNCS_DEINIT[NUM_VSYNC]))(session_t *ps) = {
 const static char *background_props_str[] = {
   "_XROOTPMAP_ID",
   "_XSETROOT_ID",
-  "ESETROOT_PMAP_ID",
   0,
 };
 
@@ -853,18 +852,11 @@ get_root_tile(session_t *ps) {
 
   // Fill pixmap if needed
   if (fill) {
-    XRenderColor  rc;
-    XImage *img;
-    unsigned int c;
+    XRenderColor  c;
 
-    XClearArea(ps->dpy, DefaultRootWindow(ps->dpy), 0, 0, 1, 1, False);
-    img = XGetImage(ps->dpy, ps->root, 0, 0, 1, 1, AllPlanes, XYPixmap);
-    c = img ? XGetPixel(img, 0, 0) : 0x808080;
-    rc.red = c >> 8 & 0xff00;
-    rc.green = c >> 0 & 0xff00;
-    rc.blue = c << 8 & 0xff00;
-    rc.alpha = 0xffff;
-    XRenderFillRectangle(ps->dpy, PictOpSrc, ps->root_tile_paint.pict, &rc, 0, 0, 1, 1);
+    c.red = c.green = c.blue = 0x8080;
+    c.alpha = 0xffff;
+    XRenderFillRectangle(ps->dpy, PictOpSrc, ps->root_tile_paint.pict, &c, 0, 0, 1, 1);
   }
 
   ps->root_tile_fill = fill;
